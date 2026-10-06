@@ -61,6 +61,3 @@ The last line is a real limitation: keyword search alone can't always tell that 
 - The evaluation set is small and was written alongside the documents. Real user questions would be harder.
 - The Claude mode isn't exercised by the automated tests, because it needs API credentials.
 
----
-
-Built with AI assistance.
