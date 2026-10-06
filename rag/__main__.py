@@ -12,8 +12,9 @@ from .generate import answer_with_claude, cite, extractive_answer
 from .index import DEFAULT_CORPUS, Index
 
 # Below this BM25 score the best match is too weak: say "not found" rather than guess.
-# Calibrated on eval/questions.json (see the eval output and ARCHITECTURE.md).
-MIN_SCORE = 6.0
+# Calibrated on eval/questions.json: just below the weakest answerable question (3.58).
+# It catches only some unanswerable questions; see ARCHITECTURE.md, ADR-004.
+MIN_SCORE = 3.0
 
 
 def ask(args):
@@ -65,9 +66,16 @@ def run_eval(args):
     print(f"lowest top score (answerable):    {result['min_top_score_answerable']:.2f}")
     print(f"highest top score (unanswerable): {result['max_top_score_unanswerable']:.2f}")
     print(f"'not found' threshold:            {MIN_SCORE:.2f}")
+    unanswerable = [r for r in result["rows"] if not r["answerable"]]
+    caught = sum(r["top_score"] < MIN_SCORE for r in unanswerable)
+    wrongly_rejected = sum(r["top_score"] < MIN_SCORE for r in result["rows"] if r["answerable"])
+    print(f"unanswerable caught by threshold: {caught}/{len(unanswerable)}")
+    print(f"answerable wrongly rejected:      {wrongly_rejected}")
 
     if result[f"hit_at_{k}"] < args.min_hit:
         sys.exit(f"FAIL: hit@{k} {result[f'hit_at_{k}']:.2f} is below the required {args.min_hit:.2f}")
+    if wrongly_rejected:
+        sys.exit("FAIL: the 'not found' threshold rejects answerable questions")
 
 
 def main(argv=None):

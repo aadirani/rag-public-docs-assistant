@@ -15,7 +15,7 @@ jobs:
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Retrieval evaluation (fails if quality drops)
-        run: python -m rag eval --min-hit 0.0
+        run: python -m rag eval --min-hit 0.9
       - name: Example questions (retrieval-only mode, no API key needed)
         run: |
           python -m rag ask "Why use a single shared NAT gateway by default?"

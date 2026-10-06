@@ -38,7 +38,8 @@ def extractive_answer(question, hits, idf):
             words = set(tokenize(sentence))
             score = weight * sum(idf.get(w, 0) for w in query & words)
             if score > best_score:
-                best, best_score, best_hit = sentence.strip(" -|*"), score, hit
+                clean = re.sub(r"\*\*|`", "", sentence).strip(" -|*")
+                best, best_score, best_hit = clean, score, hit
     if best is None:
         return None, None
     return best, best_hit
