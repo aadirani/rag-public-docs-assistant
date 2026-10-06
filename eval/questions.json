@@ -41,5 +41,9 @@
                 {"source": "perp-futures-risk-calculator", "heading": "ADR-005"}]},
   {"question": "What is the capital of France?", "expected": []},
   {"question": "How do I bake sourdough bread at home?", "expected": []},
-  {"question": "Who won the football world cup in 2022?", "expected": []}
+  {"question": "Who won the football world cup in 2022?", "expected": []},
+  {"question": "Which antivirus brand does the hospital buy?", "expected": []},
+  {"question": "What is the current price of Bitcoin?", "expected": []},
+  {"question": "How many employees does the cloud team have?", "expected": []},
+  {"question": "What is the Kubernetes cluster version used in production?", "expected": []}
 ]

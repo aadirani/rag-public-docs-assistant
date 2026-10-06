@@ -24,13 +24,19 @@ def cite(chunk):
 
 
 def extractive_answer(question, hits, idf):
-    """Pick the sentence that shares the most (rare) words with the question."""
+    """Pick the sentence that shares the most (rare) words with the question.
+
+    Each sentence's score is weighted by how well its passage ranked, so a sentence
+    from the best passage wins over an equally good one from a weaker passage.
+    """
     query = set(tokenize(question))
     best, best_score, best_hit = None, 0.0, None
+    top = hits[0]["score"] if hits else 1
     for hit in hits:
+        weight = hit["score"] / top
         for sentence in re.split(r"(?<=[.!?])\s+|\n+", hit["text"]):
             words = set(tokenize(sentence))
-            score = sum(idf.get(w, 0) for w in query & words)
+            score = weight * sum(idf.get(w, 0) for w in query & words)
             if score > best_score:
                 best, best_score, best_hit = sentence.strip(" -|*"), score, hit
     if best is None:
