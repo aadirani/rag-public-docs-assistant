@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Retrieval evaluation (fails if quality drops)
+        run: python -m rag eval --min-hit 0.0
+      - name: Example questions (retrieval-only mode, no API key needed)
+        run: |
+          python -m rag ask "Why use a single shared NAT gateway by default?"
+          python -m rag ask "What is the capital of France?"
